@@ -3,15 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/visão/App.java</file>
-            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/entidades/Compromisso.java</file>
-            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/controle/CompromissoDao.java</file>
-            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/controle/Autenticavel.java</file>
-            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/controle/UsuarioDaoList.java</file>
-            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/entidades/Agenda.java</file>
-            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/controle/GerenciaDados.java</file>
-            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/entidades/Usuario.java</file>
-            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/controle/Dao.java</file>
+            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/MyPersonalAgenda/modelo/Usuario.java</file>
         </group>
     </open-files>
 </project-private>
