@@ -9,7 +9,10 @@ import com.ifpb.MyPersonalAgenda.excecoes.EmailInvalidoException;
 import com.ifpb.MyPersonalAgenda.excecoes.SenhaInvalidaException;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 
@@ -17,31 +20,17 @@ import javax.swing.JOptionPane;
  *
  * @author ThigoYure
  */
-public class Usuario {
+public class Usuario implements Serializable{
 
     private String email;
     private String nome;
     private char sexo;
     private LocalDate nascimento;
     private String senha;
-    private File agendas;
+    private ArrayList agendas;
 
-    public Usuario(int opcao) {
-        if (opcao == 1) {
-
-            agendas = new File("Agendas" + nome + ".bin");
-
-            if (!agendas.exists()) {
-                try {
-                    agendas.createNewFile();
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null,
-                            "Falha na conexão com o arquivo",
-                            "Mensagem de Erro",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
+    public Usuario() {
+        agendas = new ArrayList<>();
     }
 
     public Usuario(String email, String nome, char sexo, LocalDate nascimento, String senha) {
@@ -142,7 +131,8 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario{" + "email=" + email + ", nome=" + nome + ", sexo=" + sexo + ", nascimento=" + nascimento + ", senha=" + senha + '}';
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return "Usuario{" + "email=" + email + ", nome=" + nome + ", sexo=" + sexo + ", nascimento=" + nascimento.format(formater) + ", senha=" + senha + '}';
     }
 
     public boolean autenticar(String email, String senha) {
