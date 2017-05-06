@@ -6,11 +6,14 @@
 package com.ifpb.MyPersonalAgenda.visao;
 
 import com.ifpb.MyPersonalAgenda.controle.UsuarioDao;
+import com.ifpb.MyPersonalAgenda.controle.UsuarioDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.UsuarioDaoBinario;
 import com.ifpb.MyPersonalAgenda.modelo.Usuario;
 import java.awt.Color;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,7 +30,6 @@ public class TelaLogin extends javax.swing.JFrame {
     public TelaLogin() {
         dao = new UsuarioDaoBinario();
         this.getContentPane().setBackground(Color.WHITE);
-        dao = new UsuarioDaoBinario();
         initComponents();
     }
 
@@ -196,27 +198,34 @@ public class TelaLogin extends javax.swing.JFrame {
         try {
             usuario = dao.read(campoEmail.getText());
         } catch (IOException | ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(this.getContentPane(),
                     "Falha na conexão",
                     "Mensagem de Erro",
                     JOptionPane.ERROR_MESSAGE);
         }
 
         if (usuario == null) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(this.getContentPane(),
                     "Usuário não encontrado",
                     "Falha ao autenticar",
                     JOptionPane.ERROR_MESSAGE);
         } else {
             String senha = new String(campoSenha.getPassword());
             if (usuario.autenticar(campoEmail.getText(), senha)) {
-                JOptionPane.showMessageDialog(null,
-                        "Bem vindo " + usuario.getNome()+"!");
+                JOptionPane.showMessageDialog(this.getContentPane(),
+                        "Bem vindo " + usuario.getNome() + "!");
 
-                PaginaInicial inicial = new PaginaInicial();
-                inicial.setVisible(true);
-                this.dispose();
-
+                PaginaInicial inicial;
+                try {
+                    inicial = new PaginaInicial(dao.read(campoEmail.getText()));
+                    inicial.setVisible(true);
+                    this.dispose();
+                } catch (ClassNotFoundException|SQLException|IOException ex) {
+                    JOptionPane.showMessageDialog(this.getContentPane(),
+                    "Falha na conexão",
+                    "Mensagem de Erro",
+                    JOptionPane.ERROR_MESSAGE);
+                }
             } else {
                 JOptionPane.showMessageDialog(null,
                         "Dados incorretos",

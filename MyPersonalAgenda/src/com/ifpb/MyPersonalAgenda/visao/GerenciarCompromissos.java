@@ -6,6 +6,7 @@
 package com.ifpb.MyPersonalAgenda.visao;
 
 import com.toedter.calendar.JDateChooser;
+import java.awt.Color;
 
 /**
  *
@@ -17,6 +18,7 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
      * Creates new form GerenciarCompromissos
      */
     public GerenciarCompromissos() {
+        this.getContentPane().setBackground(Color.WHITE);
         initComponents();
     }
 
@@ -40,7 +42,7 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Compromisso.png")); // NOI18N
 

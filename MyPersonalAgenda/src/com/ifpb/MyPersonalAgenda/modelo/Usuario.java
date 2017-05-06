@@ -5,6 +5,7 @@
  */
 package com.ifpb.MyPersonalAgenda.modelo;
 
+import com.ifpb.MyPersonalAgenda.excecoes.DataInvalidaException;
 import com.ifpb.MyPersonalAgenda.excecoes.EmailInvalidoException;
 import com.ifpb.MyPersonalAgenda.excecoes.SenhaInvalidaException;
 import java.io.File;
@@ -27,13 +28,15 @@ public class Usuario implements Serializable{
     private char sexo;
     private LocalDate nascimento;
     private String senha;
-    private ArrayList agendas;
 
     public Usuario() {
-        agendas = new ArrayList<>();
+        
     }
 
     public Usuario(String email, String nome, char sexo, LocalDate nascimento, String senha) {
+        if(nascimento.isAfter(LocalDate.now())){
+            throw new DataInvalidaException("Data de nascimento inválida!");
+        }
         this.email = email;
         this.nome = nome;
         this.sexo = sexo;
@@ -73,6 +76,9 @@ public class Usuario implements Serializable{
     }
 
     public void setNascimento(LocalDate nascimento) {
+        if(nascimento.isAfter(LocalDate.now())){
+            throw new DataInvalidaException("Data de nascimento inválida!");
+        }
         this.nascimento = nascimento;
     }
     
@@ -87,6 +93,8 @@ public class Usuario implements Serializable{
         }
         this.senha = senha;
     }
+    
+    
 
     @Override
     public int hashCode() {

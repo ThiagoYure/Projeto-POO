@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -101,8 +102,13 @@ public class UsuarioDaoBinario implements UsuarioDao {
     @Override
     public boolean update(Usuario usuario) throws ClassNotFoundException, SQLException, IOException {
         List<Usuario> users = list();
+        
+        if (usuario.getNascimento().isAfter(LocalDate.now())) {
+                return false;
+        }
 
         for (int i = 0; i < users.size(); i++) {
+
             if (users.get(i).getEmail().
                     equals(usuario.getEmail())) {
                 users.set(i, usuario);
@@ -111,6 +117,7 @@ public class UsuarioDaoBinario implements UsuarioDao {
 
                 return true;
             }
+
         }
         return false;
     }

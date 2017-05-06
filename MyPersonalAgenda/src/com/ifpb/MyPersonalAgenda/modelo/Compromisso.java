@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 package com.ifpb.MyPersonalAgenda.modelo;
-
+import com.ifpb.MyPersonalAgenda.excecoes.DataInvalidaException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -15,7 +17,7 @@ import java.util.Objects;
  */
 public class Compromisso {
     private LocalDate data;
-    private LocalTime hora;
+    private String hora;
     private String descricao;
     private String local;
     private String agenda;
@@ -23,7 +25,7 @@ public class Compromisso {
     public Compromisso() {
     }
 
-    public Compromisso(LocalDate data, LocalTime hora, String descricao, String local, String agenda) {
+    public Compromisso(LocalDate data, String hora, String descricao, String local, String agenda) {
         this.data = data;
         this.hora = hora;
         this.descricao = descricao;
@@ -35,15 +37,20 @@ public class Compromisso {
         return data;
     }
 
-    public void setData(LocalDate data) {
-        this.data = data;
+    public void setData(LocalDate data) throws DataInvalidaException {
+        if(LocalDate.now().isBefore(data)){
+            this.data = data;
+        }
+        else{
+           throw new DataInvalidaException("Data inválida!");
+        }
     }
 
-    public LocalTime getHora() {
+    public String getHora() {
         return hora;
     }
 
-    public void setHora(LocalTime hora) {
+    public void setHora(String hora) {
         this.hora = hora;
     }
 

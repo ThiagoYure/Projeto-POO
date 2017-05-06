@@ -5,9 +5,10 @@
  */
 package com.ifpb.MyPersonalAgenda.visao;
 
-import com.ifpb.MyPersonalAgenda.controle.EmailSender;
 import com.ifpb.MyPersonalAgenda.controle.UsuarioDao;
+import com.ifpb.MyPersonalAgenda.controle.UsuarioDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.UsuarioDaoBinario;
+import com.ifpb.MyPersonalAgenda.excecoes.DataInvalidaException;
 import com.ifpb.MyPersonalAgenda.excecoes.EmailInvalidoException;
 import com.ifpb.MyPersonalAgenda.excecoes.SenhaInvalidaException;
 import com.ifpb.MyPersonalAgenda.modelo.Usuario;
@@ -22,7 +23,6 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import javax.swing.JOptionPane;
-import org.apache.commons.mail.EmailException;
 
 /**
  *
@@ -246,49 +246,47 @@ public class TelaCadastroUsuario extends javax.swing.JFrame {
 
             Date input = campoNascimento.getDate();
             LocalDate nascimento = input.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            usuario.setNascimento(nascimento);
+            try {
+                usuario.setNascimento(nascimento);
+                if (dao.create(usuario)) {
 
-            if (dao.create(usuario)) {
-
-                JOptionPane.showMessageDialog(null,
-                        "Cadastrado com sucesso");
-                EmailSender emailSender = new EmailSender();
-                emailSender.sendEmail(campoEmail.getText(), campoNome.getText());
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null,
-                        "Já existe um usuário com esse e-mail",
+                    JOptionPane.showMessageDialog(this.getContentPane(),
+                            "Cadastrado com sucesso");
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this.getContentPane(),
+                            "Já existe um usuário com esse e-mail",
+                            "Mensagem de erro",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (DataInvalidaException ex) {
+                JOptionPane.showMessageDialog(this.getContentPane(),
+                        ex.getMessage(),
                         "Mensagem de erro",
                         JOptionPane.ERROR_MESSAGE);
             }
-            
 
         } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(this.getContentPane(),
                     "Data inválida", "Mensagem de erro",
                     JOptionPane.ERROR_MESSAGE);
         } catch (IOException | ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(this.getContentPane(),
                     "Falha na conexão",
                     "Mensagem de Erro",
                     JOptionPane.ERROR_MESSAGE);
         } catch (EmailInvalidoException ex) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(this.getContentPane(),
                     "E-mail não pode ser vazio", "Mensagem de erro",
                     JOptionPane.ERROR_MESSAGE);
         } catch (SenhaInvalidaException ex) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(this.getContentPane(),
                     "Senha não pode ser vazia", "Mensagem de erro",
                     JOptionPane.ERROR_MESSAGE);
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(this.getContentPane(),
                     "Já existe um usuário com esse e-mail", "Mensagem de erro",
                     JOptionPane.ERROR_MESSAGE);
-        } catch (EmailException ex) {
-            /*JOptionPane.showMessageDialog(null,
-                    "Falha ao enviar email", "Mensagem de erro",
-                    JOptionPane.ERROR_MESSAGE);*/
-            ex.printStackTrace();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
