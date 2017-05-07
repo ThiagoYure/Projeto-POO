@@ -5,21 +5,64 @@
  */
 package com.ifpb.MyPersonalAgenda.visao;
 
+import com.ifpb.MyPersonalAgenda.controle.AgendaDao;
+import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBinario;
+import com.ifpb.MyPersonalAgenda.controle.CompromissoDao;
+import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBinario;
+import com.ifpb.MyPersonalAgenda.modelo.Agenda;
+import com.ifpb.MyPersonalAgenda.modelo.Compromisso;
+import static com.ifpb.MyPersonalAgenda.visao.PaginaInicial.atualizarTabela;
+import static com.ifpb.MyPersonalAgenda.visao.PaginaInicial.usuarioLogado;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.ZoneId;
+import java.util.Date;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author ThigoYure
  */
 public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
-
+    private static CompromissoDao daoCompromisso;
+    private static AgendaDao daoAgenda;
+    private static Compromisso compAntigo = new Compromisso();
     /**
      * Creates new form TelaNovoCompromisso
      */
-    public TelaAtualizarExcluirCompromissos() {
+    public TelaAtualizarExcluirCompromissos(Compromisso comp) {
+        daoCompromisso = new CompromissoDaoBinario();
+        daoAgenda = new AgendaDaoBinario();
         this.getContentPane().setBackground(Color.WHITE);
         initComponents();
+        ImageIcon imagemTituloJanela = new ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Icone.png");
+        setIconImage(imagemTituloJanela.getImage());
+        try {
+            atualizarComboBox();
+        } catch (IOException|SQLException|ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(this.getContentPane(),
+                    "Falha na conexão",
+                    "Mensagem de Erro",
+                    JOptionPane.ERROR_MESSAGE);
+        } 
+        compAntigo.setAgenda(comp.getAgenda());
+        compAntigo.setData(comp.getData());
+        compAntigo.setHora(comp.getHora());
+        compAntigo.setDescricao(comp.getDescricao());
+        compAntigo.setLocal(comp.getLocal());
+        compAntigo.setUsuario(comp.getUsuario());
+        jComboBox1.setSelectedItem(comp.getAgenda());
+        jDateChooser1.setDate(Date.from(comp.getData().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        jFormattedTextField1.setText(comp.getHora());
+        jTextField2.setText(comp.getDescricao());
+        jTextField3.setText(comp.getLocal());
+        
     }
 
     /**
@@ -34,7 +77,6 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jDateChooser1 = new JDateChooser("dd/MM/yyyy", "##/##/#####", ' ');
         jLabel7 = new javax.swing.JLabel();
@@ -46,8 +88,10 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jFormattedTextField1 = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel4.setFont(new java.awt.Font("Vladimir Script", 1, 48)); // NOI18N
         jLabel4.setText("Compromisso");
@@ -57,12 +101,6 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText("Hora :");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setText("Data :");
 
@@ -70,7 +108,7 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
         jDateChooser1.setForeground(new java.awt.Color(255, 0, 0));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel7.setText("Senha :");
+        jLabel7.setText("Local :");
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel8.setText("Descrição :");
@@ -85,6 +123,11 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(0, 51, 204));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton1.setText("Excluir");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jTextField3.setName("CampoEmail"); // NOI18N
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
@@ -99,6 +142,17 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
         jButton2.setBackground(new java.awt.Color(0, 51, 204));
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton2.setText("Atualizar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        try {
+            jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,14 +163,6 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(61, 61, 61)
@@ -140,7 +186,15 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(jLabel8)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -154,10 +208,10 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -182,11 +236,13 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
+    
+    public static void atualizarComboBox() throws IOException, ClassNotFoundException, SQLException{ 
+        jComboBox1.removeAllItems();
+        for(Agenda a:daoAgenda.list(usuarioLogado.getEmail())){
+            jComboBox1.addItem(a.getNome());
+        }
+    }
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
@@ -194,6 +250,70 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Compromisso comp = new Compromisso();
+        comp.setHora(jFormattedTextField1.getText());
+        comp.setUsuario(usuarioLogado.getEmail());
+        comp.setDescricao(jTextField2.getText());
+        comp.setLocal(jTextField3.getText());
+        try {
+            comp.setData(jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            comp.setAgenda(jComboBox1.getSelectedItem().toString());
+            if (daoCompromisso.updateCompromissos(comp,compAntigo)) {
+
+                JOptionPane.showMessageDialog(this.getContentPane(),
+                        "Compromisso atualizado com sucesso!",
+                        "Sucesso",
+                        JOptionPane.INFORMATION_MESSAGE);
+                GerenciarAgendas.atualizarTabela();
+                atualizarTabela();
+                GerenciarCompromissos.atualizarTabela();
+                
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this.getContentPane(),
+                        "Falha ao atualizar compromisso!",
+                        "Falha",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (ClassNotFoundException | SQLException | IOException ex) {
+            JOptionPane.showMessageDialog(this.getContentPane(), "Falha na conexão");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Compromisso comp = new Compromisso();
+        
+        comp.setHora(jFormattedTextField1.getText());
+        comp.setUsuario(usuarioLogado.getEmail());
+        comp.setDescricao(jTextField2.getText());
+        comp.setLocal(jTextField3.getText());
+        
+        try {
+            comp.setData(jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            comp.setAgenda(jComboBox1.getSelectedItem().toString());
+            if (daoCompromisso.deleteCompromissos(comp)) {
+                
+                JOptionPane.showMessageDialog(this.getContentPane(),
+                        "Compromisso excluído com sucesso!",
+                        "Sucesso",
+                        JOptionPane.INFORMATION_MESSAGE);
+                GerenciarAgendas.atualizarTabela();
+                atualizarTabela();
+                GerenciarCompromissos.atualizarTabela();
+                
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this.getContentPane(),
+                        "Falha ao excluir compromisso!",
+                        "Falha",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (ClassNotFoundException | SQLException | IOException ex) {
+            JOptionPane.showMessageDialog(this.getContentPane(), "Falha na conexão");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -226,7 +346,6 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TelaAtualizarExcluirCompromissos().setVisible(true);
             }
         });
     }
@@ -234,8 +353,9 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private static javax.swing.JComboBox<String> jComboBox1;
     private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel4;
@@ -244,7 +364,6 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables

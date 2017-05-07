@@ -5,23 +5,91 @@
  */
 package com.ifpb.MyPersonalAgenda.visao;
 
+import com.ifpb.MyPersonalAgenda.controle.CompromissoDao;
+import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBinario;
+import com.ifpb.MyPersonalAgenda.modelo.Compromisso;
+import static com.ifpb.MyPersonalAgenda.visao.PaginaInicial.usuarioLogado;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author ThigoYure
  */
 public class GerenciarCompromissos extends javax.swing.JFrame {
-
+    private static CompromissoDao daoCompromisso;
     /**
      * Creates new form GerenciarCompromissos
      */
     public GerenciarCompromissos() {
         this.getContentPane().setBackground(Color.WHITE);
+        daoCompromisso = new CompromissoDaoBinario();
         initComponents();
+        ImageIcon imagemTituloJanela = new ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Icone.png");
+        setIconImage(imagemTituloJanela.getImage());
+        atualizarTabela();
     }
+    
+    public static void atualizarTabela(){
+        List<Compromisso> compromissos;
+        jTable1.removeAll();
+        try {
+            compromissos = daoCompromisso.listCompromissos();
+            String[] cabecalho = {"Data", "Hora", "Compromisso"};
+            String[][] compromissosMat = new String[compromissos.size()][4];
+            for (int i = 0; i < compromissos.size(); i++) {
+                Compromisso comp = compromissos.get(i);
+                compromissosMat[i][0] = comp.getData().toString();
+                compromissosMat[i][1] = comp.getHora();
+                compromissosMat[i][2] = comp.getDescricao();
 
+            }
+            System.out.println(compromissosMat);
+            jTable1.removeAll();
+            DefaultTableModel modelo = new DefaultTableModel(compromissosMat, cabecalho);
+            jTable1.setModel(modelo);
+
+        } catch (ClassNotFoundException | IOException | SQLException ex) {
+            JOptionPane.showMessageDialog(jTable1.getRootPane().getContentPane(), "Falha na conexão");
+        }
+    }
+    
+    public static void atualizarTabelaIntervalo() throws IOException, SQLException {
+        List<Compromisso> compromissos;
+        jTable1.removeAll();
+        try {
+            compromissos = daoCompromisso.listarCompromissosIntervalo(jDateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),"Todas");
+            String[] cabecalho = {"Data", "Hora", "Compromisso"};
+            String[][] compromissosMat = new String[compromissos.size()][3];
+            for (int i = 0; i < compromissos.size(); i++) {
+                Compromisso comp = compromissos.get(i);
+                compromissosMat[i][0] = comp.getData().toString();
+                compromissosMat[i][1] = comp.getHora();
+                compromissosMat[i][2] = comp.getDescricao();
+
+            }
+            System.out.println(compromissosMat);
+            jTable1.removeAll();
+            DefaultTableModel modelo = new DefaultTableModel(compromissosMat, cabecalho);
+            jTable1.setModel(modelo);
+
+        } catch (ClassNotFoundException | IOException | SQLException ex) {
+            JOptionPane.showMessageDialog(jTable1.getRootPane().getContentPane(), "Falha na conexão");
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,6 +111,7 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Compromisso.png")); // NOI18N
 
@@ -75,6 +144,11 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
             }
         ));
         jTable1.setGridColor(new java.awt.Color(0, 51, 255));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -138,6 +212,20 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        Compromisso comp = new Compromisso();
+        int k = jTable1.getSelectedRow();
+        String data = (String) jTable1.getValueAt(k, 0);
+        String hora = (String) jTable1.getValueAt(k, 1);
+        String descricao = (String) jTable1.getValueAt(k, 2);
+        comp.setDescricao(descricao);
+        comp.setHora(hora);
+        comp.setData(LocalDate.parse(data));
+        comp.setUsuario(usuarioLogado.getEmail());
+        TelaAtualizarExcluirCompromissos gerenciaCompromissos = new TelaAtualizarExcluirCompromissos(comp);
+        gerenciaCompromissos.setVisible(true);
+    }//GEN-LAST:event_jTable1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -175,14 +263,14 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
+    private static com.toedter.calendar.JDateChooser jDateChooser1;
+    private static com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    public static javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

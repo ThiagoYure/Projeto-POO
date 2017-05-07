@@ -5,7 +5,27 @@
  */
 package com.ifpb.MyPersonalAgenda.visao;
 
+import com.ifpb.MyPersonalAgenda.controle.AgendaDao;
+import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBinario;
+import com.ifpb.MyPersonalAgenda.modelo.Agenda;
+import com.ifpb.MyPersonalAgenda.modelo.Compromisso;
+import static com.ifpb.MyPersonalAgenda.visao.PaginaInicial.usuarioLogado;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -13,12 +33,41 @@ import java.awt.Color;
  */
 public class GerenciarAgendas extends javax.swing.JFrame {
 
+    private static AgendaDao daoAgenda;
+
     /**
      * Creates new form GerenciarAgendas
      */
     public GerenciarAgendas() {
         this.getContentPane().setBackground(Color.WHITE);
+        daoAgenda = new AgendaDaoBinario();
         initComponents();
+        ImageIcon imagemTituloJanela = new ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Icone.png");
+        setIconImage(imagemTituloJanela.getImage());
+        atualizarTabela();
+    }
+
+    public static void atualizarTabela() {
+        List<Agenda> agendas;
+        jTable1.removeAll();
+        try {
+            agendas = daoAgenda.list(usuarioLogado.getEmail());
+            String[] cabecalho = {"Nome", "Descricao"};
+            String[][] agendasMat = new String[agendas.size()][3];
+            for (int i = 0; i < agendas.size(); i++) {
+                Agenda agenda = agendas.get(i);
+                agendasMat[i][0] = agenda.getNome();
+                agendasMat[i][1] = agenda.getDescricao();
+
+            }
+            System.out.println(agendasMat);
+            jTable1.removeAll();
+            DefaultTableModel modelo = new DefaultTableModel(agendasMat, cabecalho);
+            jTable1.setModel(modelo);
+
+        } catch (ClassNotFoundException | IOException | SQLException ex) {
+            JOptionPane.showMessageDialog(jTable1.getRootPane().getContentPane(), "Falha na conexão");
+        }
     }
 
     /**
@@ -40,6 +89,7 @@ public class GerenciarAgendas extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gerenciar Agendas");
+        setResizable(false);
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Agenda.png")); // NOI18N
 
@@ -55,7 +105,14 @@ public class GerenciarAgendas extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jTable1.setGridColor(new java.awt.Color(0, 51, 255));
+        jTable1.setName(""); // NOI18N
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -122,6 +179,17 @@ public class GerenciarAgendas extends javax.swing.JFrame {
         telaNovaAgenda.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        Agenda agenda = new Agenda();
+        int k = jTable1.getSelectedRow();
+        String nome = (String) jTable1.getValueAt(k, 0);
+        String descricao = (String) jTable1.getValueAt(k, 1);
+        agenda.setDescricao(descricao);
+        agenda.setNome(nome);
+        TelaAtualizarExcluirAgendas gerenciaAgendas = new TelaAtualizarExcluirAgendas(agenda);
+        gerenciaAgendas.setVisible(true);
+    }//GEN-LAST:event_jTable1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -164,6 +232,6 @@ public class GerenciarAgendas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    public static javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

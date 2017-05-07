@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
  *
  * @author ThigoYure
  */
-public class AgendaDaoBinario implements AgendaDao{
+public class AgendaDaoBinario implements AgendaDao {
 
     private File agendas;
 
@@ -49,7 +49,7 @@ public class AgendaDaoBinario implements AgendaDao{
     }
 
     @Override
-    public Agenda read(String nome) throws ClassNotFoundException, IOException {
+    public Agenda read(String nome) throws ClassNotFoundException, IOException,SQLException {
         List<Agenda> agendasUsers = list(usuarioLogado.getEmail());
 
         for (Agenda a : agendasUsers) {
@@ -61,21 +61,20 @@ public class AgendaDaoBinario implements AgendaDao{
     }
 
     @Override
-    public ArrayList<Agenda> list(String usuario) throws IOException, ClassNotFoundException {
-        ArrayList<Agenda> agendas = new ArrayList<>();
-        ArrayList<Agenda> retorno = new ArrayList<>();
+    public List<Agenda> list(String usuario) throws IOException, ClassNotFoundException, SQLException {
+        List<Agenda> agendasList = new ArrayList<>();
+        List<Agenda> retorno = new ArrayList<>();
         if (this.agendas.length() > 0) {
-            ObjectInputStream input = new ObjectInputStream(
+            ObjectInputStream input;
+            input = new ObjectInputStream(
                     new FileInputStream(this.agendas));
-
-            retorno = (ArrayList<Agenda>) input.readObject();
-            if (retorno != null) {
-                for (Agenda a : retorno) {
-                    if (a.getEmailUser().equals(usuario));
-                    agendas.add(a);
+            retorno = (List<Agenda>) input.readObject();
+            for (Agenda a : retorno) {
+                if (a.getEmailUser().equals(usuarioLogado.getEmail())){
+                    agendasList.add(a);
                 }
             }
-            return agendas;
+            return agendasList;
         } else {
             return new ArrayList<>();
         }
@@ -83,7 +82,7 @@ public class AgendaDaoBinario implements AgendaDao{
 
     @Override
     public boolean create(Agenda agenda) throws ClassNotFoundException, SQLException, IOException {
-        ArrayList<Agenda> agendasUsers = list(PaginaInicial.usuarioLogado.getEmail());
+        List<Agenda> agendasUsers = list(PaginaInicial.usuarioLogado.getEmail());
 
         for (Agenda a : agendasUsers) {
             if (a.getNome().equals(agenda.getNome()) && agenda.getEmailUser().equals(a.getEmailUser())) {
@@ -93,7 +92,6 @@ public class AgendaDaoBinario implements AgendaDao{
 
         agendasUsers.add(agenda);
 
-
         atualizarArquivo(agendasUsers);
 
         return true;
@@ -101,7 +99,7 @@ public class AgendaDaoBinario implements AgendaDao{
 
     @Override
     public boolean delete(String nome) throws ClassNotFoundException, SQLException, IOException {
-        ArrayList<Agenda> agendasUsers = list(PaginaInicial.usuarioLogado.getEmail());
+        List<Agenda> agendasUsers = list(PaginaInicial.usuarioLogado.getEmail());
 
         for (Agenda a : agendasUsers) {
 
@@ -115,13 +113,13 @@ public class AgendaDaoBinario implements AgendaDao{
     }
 
     @Override
-    public boolean update(Agenda agenda) throws ClassNotFoundException, SQLException, IOException {
-        ArrayList<Agenda> agendasUsers = list(PaginaInicial.usuarioLogado.getEmail());
+    public boolean update(Agenda agendaNova, Agenda agendaAntiga) throws ClassNotFoundException, SQLException, IOException {
+        List<Agenda> agendasUsers = list(PaginaInicial.usuarioLogado.getEmail());
 
         for (int i = 0; i < agendasUsers.size(); i++) {
             if (agendasUsers.get(i).getNome().
-                    equals(agenda.getNome()) && agendasUsers.get(i).getEmailUser().equals(agenda.getEmailUser())) {
-                agendasUsers.set(i, agenda);
+                    equals(agendaAntiga.getNome()) && agendasUsers.get(i).getEmailUser().equals(agendaAntiga.getEmailUser())) {
+                agendasUsers.set(i, agendaNova);
                 atualizarArquivo(agendasUsers);
 
                 return true;
@@ -137,6 +135,5 @@ public class AgendaDaoBinario implements AgendaDao{
         out.writeObject(agendasUsers);
         out.close();
     }
-    
 
 }

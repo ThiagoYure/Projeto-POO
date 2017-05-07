@@ -27,7 +27,7 @@ public interface AgendaDao {
 
     public boolean delete(String nome) throws ClassNotFoundException, SQLException, IOException;
 
-    public boolean update(Agenda agenda) throws ClassNotFoundException, SQLException, IOException;
+    public boolean update(Agenda agendaNova, Agenda agendaAntiga) throws ClassNotFoundException, SQLException, IOException;
     
     
 }

@@ -14,7 +14,10 @@ import com.ifpb.MyPersonalAgenda.excecoes.SenhaInvalidaException;
 import com.ifpb.MyPersonalAgenda.modelo.Usuario;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -22,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -39,6 +43,8 @@ public class TelaCadastroUsuario extends javax.swing.JFrame {
         this.getContentPane().setBackground(Color.WHITE);
         dao = new UsuarioDaoBinario();
         initComponents();
+        ImageIcon imagemTituloJanela = new ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Icone.png");
+        setIconImage(imagemTituloJanela.getImage());
     }
 
     /**

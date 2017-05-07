@@ -5,14 +5,20 @@
  */
 package com.ifpb.MyPersonalAgenda.visao;
 
+import com.ifpb.MyPersonalAgenda.controle.AgendaDao;
 import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBinario;
 import com.ifpb.MyPersonalAgenda.modelo.Agenda;
 import static com.ifpb.MyPersonalAgenda.visao.PaginaInicial.atualizarComboBox;
+import static com.ifpb.MyPersonalAgenda.visao.PaginaInicial.usuarioLogado;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,7 +26,7 @@ import javax.swing.JOptionPane;
  * @author ThigoYure
  */
 public class TelaNovaAgenda extends javax.swing.JFrame {
-    private AgendaDaoBinario daoAgenda;
+    private AgendaDao daoAgenda;
     /**
      * Creates new form TelaNovaAgenda
      */
@@ -28,6 +34,8 @@ public class TelaNovaAgenda extends javax.swing.JFrame {
         this.getContentPane().setBackground(Color.WHITE);
         daoAgenda = new AgendaDaoBinario();
         initComponents();
+        ImageIcon imagemTituloJanela = new ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Icone.png");
+        setIconImage(imagemTituloJanela.getImage());
     }
 
     /**
@@ -50,6 +58,7 @@ public class TelaNovaAgenda extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nova Agenda");
+        setResizable(false);
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Agenda.png")); // NOI18N
 
@@ -70,16 +79,10 @@ public class TelaNovaAgenda extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("Descrição :");
 
-        jTextField2.setText("jTextField2");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addComponent(jLabel4)
-                .addContainerGap(140, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -90,7 +93,7 @@ public class TelaNovaAgenda extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextField1))
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -99,6 +102,10 @@ public class TelaNovaAgenda extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jSeparator1)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addGap(99, 99, 99))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,7 +126,7 @@ public class TelaNovaAgenda extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(43, 43, 43)
                         .addComponent(jButton1)
                         .addContainerGap())))
         );
@@ -131,27 +138,28 @@ public class TelaNovaAgenda extends javax.swing.JFrame {
         Agenda agenda = new Agenda();
         agenda.setNome(jTextField1.getText());
         agenda.setDescricao(jTextField2.getText());
+        agenda.setEmailUser(usuarioLogado.getEmail());
         try {
             if(daoAgenda.create(agenda)){
-                atualizarComboBox();
-                JOptionPane.showMessageDialog(null,
+                
+                JOptionPane.showMessageDialog(this.getContentPane(),
                         "Agenda criada com sucesso!",
                         "Sucesso",
                         JOptionPane.INFORMATION_MESSAGE);
+                GerenciarAgendas.atualizarTabela();
+                TelaNovoCompromisso.atualizarComboBox();
+                TelaAtualizarExcluirCompromissos.atualizarComboBox();
+                atualizarComboBox();
                 this.dispose();
             }else{
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(this.getContentPane(),
                         "Falha ao criar agenda!",
                         "Falha",
                         JOptionPane.ERROR_MESSAGE);
             }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TelaNovaAgenda.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(TelaNovaAgenda.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(TelaNovaAgenda.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (ClassNotFoundException|SQLException|IOException ex) {
+            JOptionPane.showMessageDialog(this.getContentPane(), "Falha na conexão");
+        } 
         
     }//GEN-LAST:event_jButton1ActionPerformed
 

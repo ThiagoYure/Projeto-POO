@@ -8,11 +8,15 @@ package com.ifpb.MyPersonalAgenda.visao;
 import com.ifpb.MyPersonalAgenda.controle.AgendaDao;
 import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBinario;
 import com.ifpb.MyPersonalAgenda.controle.CompromissoDao;
+import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBinario;
 import com.ifpb.MyPersonalAgenda.modelo.Agenda;
 import com.ifpb.MyPersonalAgenda.modelo.Compromisso;
 import com.ifpb.MyPersonalAgenda.modelo.Usuario;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
@@ -20,7 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -30,18 +37,28 @@ public class PaginaInicial extends javax.swing.JFrame {
 
     public static Usuario usuarioLogado;
     private static AgendaDao daoAgenda;
+    private static CompromissoDao compromissoDao;
 
     /**
      * Creates new form PaginaInicial
      */
-    public PaginaInicial(Usuario usuario) throws IOException, ClassNotFoundException, SQLException {
+    public PaginaInicial(Usuario usuario){
         this.getContentPane().setBackground(Color.WHITE);
         daoAgenda = new AgendaDaoBinario();
+        compromissoDao = new CompromissoDaoBinario();
         this.usuarioLogado = usuario;
         initComponents();
-        
-        //preencheTabela();
-        atualizarComboBox();
+        ImageIcon imagemTituloJanela = new ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Icone.png");
+        setIconImage(imagemTituloJanela.getImage());
+        try {
+            atualizarComboBox();
+            atualizarTabela();
+        } catch (IOException|ClassNotFoundException|SQLException ex) {
+            JOptionPane.showMessageDialog(this.getContentPane(),
+                    "Falha na conexão",
+                    "Mensagem de Erro",
+                    JOptionPane.ERROR_MESSAGE);
+        } 
 
         
     }
@@ -51,58 +68,35 @@ public class PaginaInicial extends javax.swing.JFrame {
         initComponents();
     }
     
-    public static void atualizarComboBox() throws IOException, ClassNotFoundException{ 
-        
-    }
-
-    public void preencheTabela(String agenda) throws ClassNotFoundException, SQLException, IOException {
-        
+    public static void atualizarComboBox() throws IOException, ClassNotFoundException, SQLException{ 
+        jComboBox1.removeAllItems();
+        jComboBox1.addItem("Todas");
+        for(Agenda a:daoAgenda.list(usuarioLogado.getEmail())){
+            jComboBox1.addItem(a.getNome());
+        }
     }
     
-    public void preencheTabela() throws ClassNotFoundException, SQLException, IOException {
-        
-        
-    }
+    public static void atualizarTabela(){
+        List<Compromisso> compromissosIntervalo;
+        jTable1.removeAll();
+        try {
+            compromissosIntervalo = compromissoDao.listarCompromissosIntervalo(LocalDate.now(),LocalDate.now().plusDays(30), (String) jComboBox1.getSelectedItem());
+            String[] cabecalho = {"Data", "Hora", "Compromisso"};
+            String[][] compromissos = new String[compromissosIntervalo.size()][3];
+            for (int i = 0; i < compromissosIntervalo.size(); i++) {
+                Compromisso comp = compromissosIntervalo.get(i);
+                compromissos[i][0] = comp.getData().toString();
+                compromissos[i][1] = comp.getHora().toString();
+                compromissos[i][2] = comp.getDescricao();
 
-    public class CompromissosTableModel extends AbstractTableModel {
-
-        private List<Compromisso> dados;
-        private String[] colunas = {"Data", "Hora", "Compromisso"};
-
-        public CompromissosTableModel(ArrayList<Compromisso> comps) {
-            dados = comps;
-        }
-
-        public void addRow(Compromisso comp) {
-            this.dados.add(comp);
-            this.fireTableDataChanged();
-        }
-
-        public String getColumnName(int num) {
-            return this.colunas[num];
-        }
-
-        @Override
-        public int getRowCount() {
-            return dados.size();
-        }
-
-        @Override
-        public int getColumnCount() {
-            return colunas.length;
-        }
-
-        @Override
-        public Object getValueAt(int linha, int coluna) {
-            switch (coluna) {
-                case 0:
-                    return dados.get(linha).getData();
-                case 1:
-                    return dados.get(linha).getHora();
-                case 2:
-                    return dados.get(linha).getDescricao();
             }
-            return null;
+            System.out.println(compromissosIntervalo);
+            jTable1.removeAll();
+            DefaultTableModel modelo = new DefaultTableModel(compromissos, cabecalho);
+            jTable1.setModel(modelo);
+
+        } catch (ClassNotFoundException | IOException | SQLException ex) {
+            JOptionPane.showMessageDialog(jTable1.getRootPane().getContentPane(), "Falha na conexão");
         }
     }
 
@@ -129,6 +123,7 @@ public class PaginaInicial extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Página Inicial");
+        setResizable(false);
 
         jLabel4.setFont(new java.awt.Font("Vladimir Script", 1, 48)); // NOI18N
         jLabel4.setText("Página Inicial");
@@ -267,15 +262,7 @@ public class PaginaInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        try {
-            preencheTabela((String) jComboBox1.getSelectedItem());
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PaginaInicial.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(PaginaInicial.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(PaginaInicial.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        atualizarTabela();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
@@ -324,6 +311,6 @@ public class PaginaInicial extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private static javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

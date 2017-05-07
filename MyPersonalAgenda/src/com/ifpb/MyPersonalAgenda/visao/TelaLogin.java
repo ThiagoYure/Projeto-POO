@@ -10,10 +10,14 @@ import com.ifpb.MyPersonalAgenda.controle.UsuarioDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.UsuarioDaoBinario;
 import com.ifpb.MyPersonalAgenda.modelo.Usuario;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -31,6 +35,8 @@ public class TelaLogin extends javax.swing.JFrame {
         dao = new UsuarioDaoBinario();
         this.getContentPane().setBackground(Color.WHITE);
         initComponents();
+        ImageIcon imagemTituloJanela = new ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Icone.png");
+        setIconImage(imagemTituloJanela.getImage());
     }
 
     /**
@@ -220,11 +226,11 @@ public class TelaLogin extends javax.swing.JFrame {
                     inicial = new PaginaInicial(dao.read(campoEmail.getText()));
                     inicial.setVisible(true);
                     this.dispose();
-                } catch (ClassNotFoundException|SQLException|IOException ex) {
+                } catch (ClassNotFoundException | SQLException | IOException ex) {
                     JOptionPane.showMessageDialog(this.getContentPane(),
-                    "Falha na conexão",
-                    "Mensagem de Erro",
-                    JOptionPane.ERROR_MESSAGE);
+                            "Falha na conexão",
+                            "Mensagem de Erro",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null,

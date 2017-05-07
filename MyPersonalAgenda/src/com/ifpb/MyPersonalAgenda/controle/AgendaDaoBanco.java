@@ -117,15 +117,15 @@ public class AgendaDaoBanco implements AgendaDao{
     }
 
     @Override
-    public boolean update(Agenda agenda) throws ClassNotFoundException, SQLException, IOException {
+    public boolean update(Agenda agendaNova, Agenda agendaAntiga) throws ClassNotFoundException, SQLException, IOException {
         Connection con = ConnectionFactory.getConnection();
         PreparedStatement stmt = con.prepareStatement(
                 "UPDATE agenda SET (nome, descricao, emailusuario)"
                 + " = (?,?,?) WHERE nome = ? and emailUsuario = ?");
-        stmt.setString(1, agenda.getNome());
-        stmt.setString(2, agenda.getDescricao());
-        stmt.setString(3, agenda.getEmailUser());
-        stmt.setString(4, usuarioLogado.getNome());
+        stmt.setString(1, agendaNova.getNome());
+        stmt.setString(2, agendaNova.getDescricao());
+        stmt.setString(3, agendaNova.getEmailUser());
+        stmt.setString(4, agendaAntiga.getNome());
         stmt.setString(5, usuarioLogado.getEmail());
 
         boolean retorno = stmt.executeUpdate() > 0;

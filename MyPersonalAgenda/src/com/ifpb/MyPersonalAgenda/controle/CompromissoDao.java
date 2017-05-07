@@ -22,14 +22,16 @@ public interface CompromissoDao {
 
     public Compromisso readCompromissos(LocalDate data, String hora, String agenda) throws IOException, ClassNotFoundException,SQLException;
 
+    public List<Compromisso> listCompromissos(String agenda) throws IOException, ClassNotFoundException,SQLException;
+    
     public List<Compromisso> listCompromissos() throws IOException, ClassNotFoundException,SQLException;
 
     public boolean createCompromissos(Compromisso comp) throws IOException, ClassNotFoundException,SQLException;
 
     public boolean deleteCompromissos(Compromisso comp) throws IOException, ClassNotFoundException,SQLException;
 
-    public boolean updateCompromissos(Compromisso comp) throws IOException, ClassNotFoundException,SQLException;
+    public boolean updateCompromissos(Compromisso compNovo,Compromisso compAntigo) throws IOException, ClassNotFoundException,SQLException;
 
-    public List<Compromisso> listarCompromissosIntervalo(LocalDate inicio, LocalDate fim) throws ClassNotFoundException, IOException,SQLException;
+    public List<Compromisso> listarCompromissosIntervalo(LocalDate inicio, LocalDate fim,String agenda) throws ClassNotFoundException, IOException,SQLException;
 
 }

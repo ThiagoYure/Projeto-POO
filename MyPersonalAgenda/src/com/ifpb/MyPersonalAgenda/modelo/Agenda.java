@@ -30,7 +30,6 @@ public class Agenda implements Serializable {
     private String nome;
     private String emailUser;
     private String descricao;
-    private ArrayList<Compromisso> compromissos;
 
     public Agenda() {
     }
@@ -41,7 +40,6 @@ public class Agenda implements Serializable {
         this.nome = nome;
         this.emailUser = emailUser;
         this.descricao = descricao;
-        this.compromissos = new ArrayList<>();
     }
 
     public String getNome() {
@@ -67,14 +65,6 @@ public class Agenda implements Serializable {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-
-    public ArrayList<Compromisso> getCompromissos() {
-        return compromissos;
-    }
-
-    public void setCompromissos(ArrayList<Compromisso> compromissos) {
-        this.compromissos = compromissos;
-    }
     
     
 
@@ -84,7 +74,6 @@ public class Agenda implements Serializable {
         hash = 67 * hash + Objects.hashCode(this.nome);
         hash = 67 * hash + Objects.hashCode(this.emailUser);
         hash = 67 * hash + Objects.hashCode(this.descricao);
-        hash = 67 * hash + Objects.hashCode(this.compromissos);
         return hash;
     }
 
@@ -109,62 +98,11 @@ public class Agenda implements Serializable {
         if (!Objects.equals(this.descricao, other.descricao)) {
             return false;
         }
-        if (!Objects.equals(this.compromissos, other.compromissos)) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
         return "Agenda{" + "nome=" + nome + ", emailUser=" + emailUser + ", descricao=" + descricao + '}';
-    }
-
-   
-    public Compromisso readCompromisso(LocalDate data, String hora) {
-        for(Compromisso c:compromissos){
-            if(c.getData().equals(data)&&c.getHora().equals(hora)){
-                return c;
-            }
-        }
-        return null;
-    }
-
-  
-    public List<Compromisso> listCompromisso() {
-        return compromissos;
-    }
-
-
-    public boolean createCompromisso(Compromisso comp) {
-        return compromissos.add(comp);
-    }
-
-
-    public boolean deleteCompromisso(Compromisso comp) {
-        return compromissos.remove(comp);
-    }
-
-
-    public boolean updateCompromisso(Compromisso comp) {
-        
-        for(int i = 0; i<compromissos.size(); i++){
-            if(compromissos.get(i).getData().equals(comp.getData())&&compromissos.get(i).getHora().equals(comp.getHora())){
-                compromissos.set(i, comp);
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public List<Compromisso> listarCompromissosIntervalo(LocalDate inicio,LocalDate fim){
-        List<Compromisso> compromissosIntervalo = new ArrayList<>();
-        for(int i = 0; i<compromissos.size(); i++){
-            if(compromissos.get(i).getData().isAfter(inicio)&&compromissos.get(i).getData().isBefore(fim)){
-                compromissosIntervalo.add(compromissos.get(i));
-            }
-        }
-        return compromissosIntervalo;
-        
     }
 }
