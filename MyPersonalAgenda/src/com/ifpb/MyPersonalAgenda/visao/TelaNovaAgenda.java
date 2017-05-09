@@ -147,8 +147,6 @@ public class TelaNovaAgenda extends javax.swing.JFrame {
                         "Sucesso",
                         JOptionPane.INFORMATION_MESSAGE);
                 GerenciarAgendas.atualizarTabela();
-                TelaNovoCompromisso.atualizarComboBox();
-                TelaAtualizarExcluirCompromissos.atualizarComboBox();
                 atualizarComboBox();
                 this.dispose();
             }else{

@@ -82,7 +82,7 @@ public class Compromisso implements Serializable{
     }
     
     public String getUsuario() {
-        return agenda;
+        return usuario;
     }
 
     public void setUsuario(String usuario) {

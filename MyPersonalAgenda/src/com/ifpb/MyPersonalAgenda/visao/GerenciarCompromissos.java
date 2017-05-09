@@ -30,7 +30,9 @@ import javax.swing.table.DefaultTableModel;
  * @author ThigoYure
  */
 public class GerenciarCompromissos extends javax.swing.JFrame {
+
     private static CompromissoDao daoCompromisso;
+
     /**
      * Creates new form GerenciarCompromissos
      */
@@ -42,19 +44,20 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
         setIconImage(imagemTituloJanela.getImage());
         atualizarTabela();
     }
-    
-    public static void atualizarTabela(){
+
+    public static void atualizarTabela() {
         List<Compromisso> compromissos;
         jTable1.removeAll();
         try {
             compromissos = daoCompromisso.listCompromissos();
-            String[] cabecalho = {"Data", "Hora", "Compromisso"};
+            String[] cabecalho = {"Data", "Hora", "Compromisso", "Agenda"};
             String[][] compromissosMat = new String[compromissos.size()][4];
             for (int i = 0; i < compromissos.size(); i++) {
                 Compromisso comp = compromissos.get(i);
                 compromissosMat[i][0] = comp.getData().toString();
                 compromissosMat[i][1] = comp.getHora();
                 compromissosMat[i][2] = comp.getDescricao();
+                compromissosMat[i][3] = comp.getAgenda();
 
             }
             System.out.println(compromissosMat);
@@ -66,19 +69,20 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(jTable1.getRootPane().getContentPane(), "Falha na conexão");
         }
     }
-    
+
     public static void atualizarTabelaIntervalo() throws IOException, SQLException {
         List<Compromisso> compromissos;
         jTable1.removeAll();
         try {
-            compromissos = daoCompromisso.listarCompromissosIntervalo(jDateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),"Todas");
-            String[] cabecalho = {"Data", "Hora", "Compromisso"};
-            String[][] compromissosMat = new String[compromissos.size()][3];
+            compromissos = daoCompromisso.listarCompromissosIntervalo(jDateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), "Todas");
+            String[] cabecalho = {"Data", "Hora", "Compromisso", "Agenda"};
+            String[][] compromissosMat = new String[compromissos.size()][4];
             for (int i = 0; i < compromissos.size(); i++) {
                 Compromisso comp = compromissos.get(i);
                 compromissosMat[i][0] = comp.getData().toString();
                 compromissosMat[i][1] = comp.getHora();
                 compromissosMat[i][2] = comp.getDescricao();
+                compromissosMat[i][3] = comp.getAgenda();
 
             }
             System.out.println(compromissosMat);
@@ -90,6 +94,7 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(jTable1.getRootPane().getContentPane(), "Falha na conexão");
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -213,17 +218,23 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        Compromisso comp = new Compromisso();
         int k = jTable1.getSelectedRow();
         String data = (String) jTable1.getValueAt(k, 0);
         String hora = (String) jTable1.getValueAt(k, 1);
         String descricao = (String) jTable1.getValueAt(k, 2);
-        comp.setDescricao(descricao);
-        comp.setHora(hora);
-        comp.setData(LocalDate.parse(data));
-        comp.setUsuario(usuarioLogado.getEmail());
-        TelaAtualizarExcluirCompromissos gerenciaCompromissos = new TelaAtualizarExcluirCompromissos(comp);
-        gerenciaCompromissos.setVisible(true);
+        String agenda = (String) jTable1.getValueAt(k, 3);
+        Compromisso comp;
+        try {
+            comp = daoCompromisso.readCompromissos(LocalDate.parse(data), hora, agenda);
+            TelaAtualizarExcluirCompromissos gerenciaCompromissos = new TelaAtualizarExcluirCompromissos(comp);
+            gerenciaCompromissos.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(GerenciarCompromissos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GerenciarCompromissos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(GerenciarCompromissos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     /**

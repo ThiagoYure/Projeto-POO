@@ -168,8 +168,6 @@ public class TelaAtualizarExcluirAgendas extends javax.swing.JFrame {
                         JOptionPane.INFORMATION_MESSAGE);
                 GerenciarAgendas.atualizarTabela();
                 atualizarTabela();
-                TelaNovoCompromisso.atualizarComboBox();
-                TelaAtualizarExcluirCompromissos.atualizarComboBox();
                 atualizarComboBox();
                 this.dispose();
             } else {
