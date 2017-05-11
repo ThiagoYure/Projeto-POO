@@ -6,6 +6,7 @@
 package com.ifpb.MyPersonalAgenda.visao;
 
 import com.ifpb.MyPersonalAgenda.controle.CompromissoDao;
+import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBinario;
 import com.ifpb.MyPersonalAgenda.modelo.Compromisso;
 import static com.ifpb.MyPersonalAgenda.visao.PaginaInicial.usuarioLogado;
@@ -116,6 +117,7 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Gerenciar Compromissos");
         setResizable(false);
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Compromisso.png")); // NOI18N
@@ -138,6 +140,11 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(0, 51, 204));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton1.setText("Atualizar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jTable1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -236,6 +243,16 @@ public class GerenciarCompromissos extends javax.swing.JFrame {
             Logger.getLogger(GerenciarCompromissos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            atualizarTabelaIntervalo();
+        } catch (IOException | SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Falha na conexão");
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(null, "Sem Intervalo!");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

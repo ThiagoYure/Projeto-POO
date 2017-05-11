@@ -6,6 +6,7 @@
 package com.ifpb.MyPersonalAgenda.visao;
 
 import com.ifpb.MyPersonalAgenda.controle.AgendaDao;
+import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBinario;
 import com.ifpb.MyPersonalAgenda.modelo.Agenda;
 import static com.ifpb.MyPersonalAgenda.visao.GerenciarAgendas.atualizarTabela;
@@ -67,7 +68,7 @@ public class TelaAtualizarExcluirAgendas extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Nova Agenda");
+        setTitle("Edição de Agendas");
         setResizable(false);
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ThigoYure\\Documents\\Projeto-POO\\Projeto-POO\\MyPersonalAgenda\\src\\com\\ifpb\\MyPersonalAgenda\\images\\Agenda.png")); // NOI18N

@@ -6,6 +6,7 @@
 package com.ifpb.MyPersonalAgenda.visao;
 
 import com.ifpb.MyPersonalAgenda.controle.AgendaDao;
+import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBinario;
 import com.ifpb.MyPersonalAgenda.modelo.Agenda;
 import static com.ifpb.MyPersonalAgenda.visao.PaginaInicial.atualizarComboBox;

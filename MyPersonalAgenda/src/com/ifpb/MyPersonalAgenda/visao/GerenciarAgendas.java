@@ -6,6 +6,7 @@
 package com.ifpb.MyPersonalAgenda.visao;
 
 import com.ifpb.MyPersonalAgenda.controle.AgendaDao;
+import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBinario;
 import com.ifpb.MyPersonalAgenda.modelo.Agenda;
 import com.ifpb.MyPersonalAgenda.modelo.Compromisso;
@@ -49,11 +50,11 @@ public class GerenciarAgendas extends javax.swing.JFrame {
 
     public static void atualizarTabela() {
         List<Agenda> agendas;
-        jTable1.removeAll();
+
         try {
             agendas = daoAgenda.list(usuarioLogado.getEmail());
             String[] cabecalho = {"Nome", "Descricao"};
-            String[][] agendasMat = new String[agendas.size()][3];
+            String[][] agendasMat = new String[agendas.size()][2];
             for (int i = 0; i < agendas.size(); i++) {
                 Agenda agenda = agendas.get(i);
                 agendasMat[i][0] = agenda.getNome();

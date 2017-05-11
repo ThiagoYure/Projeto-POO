@@ -19,13 +19,15 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Essa classe contém métodos para persistência da entidade usuario no Arquivo Binário
  * @author ThigoYure
  */
 public class UsuarioDaoBinario implements UsuarioDao {
 
     private File usuarios;
-
+    /**
+     * Construtor do DaoBinario da entidade usuario
+     */
     public UsuarioDaoBinario() {
         usuarios = new File("Usuarios.bin");
 
@@ -40,7 +42,14 @@ public class UsuarioDaoBinario implements UsuarioDao {
             }
         }
     }
-
+    /**
+     * Busca um usuario no Arquivo Binário
+     * @param email email do usuario que se deseja recuperar
+     * @return o usuario buscado
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException 
+     */
     @Override
     public Usuario read(String email) throws ClassNotFoundException, SQLException, IOException {
         List<Usuario> users = list();
@@ -52,7 +61,13 @@ public class UsuarioDaoBinario implements UsuarioDao {
         }
         return null;
     }
-
+    /**
+     * Lista todos os usuarios do Arquivo Binário
+     * @return a lista de todos os usuarios
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException 
+     */
     @Override
     public List<Usuario> list() throws ClassNotFoundException, SQLException, IOException {
         if (usuarios.length() > 0) {
@@ -65,7 +80,14 @@ public class UsuarioDaoBinario implements UsuarioDao {
             return new ArrayList<>();
         }
     }
-
+    /**
+     * Insere um usuario no Arquivo Binário
+     * @param usuario usuario a ser inserido
+     * @return a confirmação da inserção ou não
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException 
+     */
     @Override
     public boolean create(Usuario usuario) throws ClassNotFoundException, SQLException, IOException {
 
@@ -83,7 +105,14 @@ public class UsuarioDaoBinario implements UsuarioDao {
 
         return true;
     }
-
+    /**
+     * Remove um usuario do Arquivo Binário
+     * @param email email do usuario a ser removido
+     * @return a confirmação da remoção ou não
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException 
+     */
     @Override
     public boolean delete(String email) throws ClassNotFoundException, SQLException, IOException {
         List<Usuario> users = list();
@@ -98,7 +127,14 @@ public class UsuarioDaoBinario implements UsuarioDao {
         }
         return false;
     }
-
+    /**
+     * Atualiza um usuario no Arquivo Binario
+     * @param usuario usuario a novo que substituirá o antigo
+     * @return confirmação da atualização ou não
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException 
+     */
     @Override
     public boolean update(Usuario usuario) throws ClassNotFoundException, SQLException, IOException {
         List<Usuario> users = list();
@@ -121,7 +157,11 @@ public class UsuarioDaoBinario implements UsuarioDao {
         }
         return false;
     }
-
+    /**
+     * Atualiza o Arquivo Binário de usuarios
+     * @param users lista de usuarios a ser usada para atualizar o arquivo
+     * @throws IOException 
+     */
     private void atualizarArquivo(List<Usuario> users) throws IOException {
         ObjectOutputStream out = new ObjectOutputStream(
                 new FileOutputStream(usuarios));

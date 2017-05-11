@@ -21,7 +21,7 @@ public class Email {
         System.out.println("alterando hostname...");
         email.setHostName("smtp.gmail.com");
         //Quando a porta utilizada não é a padrão (gmail = 465)
-        email.setSmtpPort(465);
+        email.setSmtpPort(25);
         //Adicione os destinatários
         email.addTo("thigoyure@gmail.com", "Thiago");
         //Configure o seu email do qual enviará
@@ -34,8 +34,9 @@ public class Email {
         System.out.println("autenticando...");
         email.setAuthentication("mypersonalgendapoo@gmail.com", "mypersonalagenda");
         System.out.println("enviando...");
-        email.setSSL(true);
         email.send();
+        email.setSSL(true);
+        
         email.setDebug(true);
         System.out.println("Email enviado!");
     }

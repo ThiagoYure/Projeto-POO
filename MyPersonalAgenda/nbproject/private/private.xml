@@ -2,6 +2,16 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/MyPersonalAgenda/visao/PaginaInicial.java</file>
+            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/MyPersonalAgenda/visao/TelaAtualizarExcluirAgendas.java</file>
+            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/MyPersonalAgenda/visao/TelaNovaAgenda.java</file>
+            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/MyPersonalAgenda/visao/GerenciarAgendas.java</file>
+            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/MyPersonalAgenda/visao/TelaCadastroUsuario.java</file>
+            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/MyPersonalAgenda/visao/TelaLogin.java</file>
+            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/MyPersonalAgenda/visao/TelaAtualizarExcluirCompromissos.java</file>
+            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/MyPersonalAgenda/visao/GerenciarCompromissos.java</file>
+            <file>file:/C:/Users/ThigoYure/Documents/Projeto-POO/Projeto-POO/MyPersonalAgenda/src/com/ifpb/MyPersonalAgenda/visao/TelaNovoCompromisso.java</file>
+        </group>
     </open-files>
 </project-private>

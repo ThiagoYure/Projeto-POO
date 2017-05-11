@@ -21,18 +21,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Essa classe contém métodos para persistência da entidade Compromisso em Banco de Dados
  * @author ThigoYure
  */
 public class CompromissoDaoBanco implements CompromissoDao {
 
     AgendaDaoBanco agendaDao = new AgendaDaoBanco();
-    List<Agenda> agendas = agendas = agendaDao.list(usuarioLogado.getEmail());
-
-    public CompromissoDaoBanco() throws ClassNotFoundException, SQLException, IOException {
+    /**
+    * Construtor do DaoBanco da entidade Compromisso
+    */
+    public CompromissoDaoBanco(){
 
     }
-
+    /**
+     * Busca por um determinado compromisso no Banco de Dados
+     * @param data a data do compromisso a buscar
+     * @param hora a data do compromisso a buscar
+     * @param agenda a agenda do compromisso a buscar
+     * @return o compromisso solicitado
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public Compromisso readCompromissos(LocalDate data, String hora, String agenda) throws ClassNotFoundException, SQLException {
         Connection con = ConnectionFactory.getConnection();
@@ -60,7 +69,13 @@ public class CompromissoDaoBanco implements CompromissoDao {
             return null;
         }
     }
-
+    /**
+     * Lista todos os compromissos do usuario logado no sistema
+     * @return a lista de todos os compromissos do usuario logado 
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public List<Compromisso> listCompromissos() throws IOException, ClassNotFoundException, SQLException {
         Connection con = ConnectionFactory.getConnection();
@@ -87,7 +102,14 @@ public class CompromissoDaoBanco implements CompromissoDao {
         return compromissos;
 
     }
-
+    /**
+     * Lista todos os compromisso de uma determinada agenda do usuário logado
+     * @param agenda nome da agenda do usuario
+     * @return a lista de compromissos para aquela agenda do usuario
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public List<Compromisso> listCompromissos(String agenda) throws IOException, ClassNotFoundException, SQLException {
         Connection con = ConnectionFactory.getConnection();
@@ -115,7 +137,14 @@ public class CompromissoDaoBanco implements CompromissoDao {
         return compromissos;
 
     }
-
+    /**
+     * Insere um compromisso no Banco de Dados
+     * @param comp o compromisso a ser inserido
+     * @return a confirmação da inserção ou não
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public boolean createCompromissos(Compromisso comp) throws IOException, ClassNotFoundException, SQLException {
         Connection con = ConnectionFactory.getConnection();
@@ -132,13 +161,20 @@ public class CompromissoDaoBanco implements CompromissoDao {
         con.close();
         return retorno;
     }
-
+    /**
+     * Remove um compromisso do Banco de Dados
+     * @param comp o compromisso a ser removido
+     * @return a cnfirmação da remoção ou não
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public boolean deleteCompromissos(Compromisso comp) throws IOException, ClassNotFoundException, SQLException {
         Connection con = ConnectionFactory.getConnection();
 
         PreparedStatement stmt = con.prepareStatement(
-                "DELETE FROM compromisso WHERE data = ? and hora = ? and agenda = ? and emailUsuario = ?");
+                "DELETE FROM compromisso WHERE data = ? and hora = ? and agenda = ? and usuario = ?");
 
         stmt.setDate(1, Date.valueOf(comp.getData()));
         stmt.setString(2, comp.getHora());
@@ -149,13 +185,21 @@ public class CompromissoDaoBanco implements CompromissoDao {
         con.close();
         return retorno;
     }
-
+    /**
+     * Atualiza um compromisso no Banco de Dados
+     * @param compNovo novo compromisso a ser inserido no lugar do antigo
+     * @param compAntigo compromisso antigo a ser substituido pelo novo
+     * @return a confirmação da atualização ou não
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public boolean updateCompromissos(Compromisso compNovo, Compromisso compAntigo) throws IOException, ClassNotFoundException, SQLException {
         Connection con = ConnectionFactory.getConnection();
         PreparedStatement stmt = con.prepareStatement(
                 "UPDATE compromisso SET (data,hora,descricao,local,agenda,usuario)"
-                + " = (?,?,?,?,?,?) WHERE data = ? and hora = ? and agenda = ? and emailUsuario = ?");
+                + " = (?,?,?,?,?,?) WHERE data = ? and hora = ? and agenda = ? and usuario = ?");
         stmt.setDate(1, Date.valueOf(compNovo.getData()));
         stmt.setString(2, compNovo.getHora());
         stmt.setString(3, compNovo.getDescricao());
@@ -171,14 +215,23 @@ public class CompromissoDaoBanco implements CompromissoDao {
         con.close();
         return retorno;
     }
-
+    /**
+     * Lista compromissos de um determinado intervalo de datas em uma determinada agenda
+     * @param inicio data inicial do intervalo
+     * @param fim data final do intervalo
+     * @param agenda nome da agenda a que os compromissos devem pertencer
+     * @return a lista de compromissos da agenda para o intervalo
+     * @throws ClassNotFoundException
+     * @throws IOException
+     * @throws SQLException 
+     */
     @Override
     public List<Compromisso> listarCompromissosIntervalo(LocalDate inicio, LocalDate fim, String agenda) throws ClassNotFoundException, IOException, SQLException {
         Connection con = ConnectionFactory.getConnection();
         PreparedStatement stmt;
-        if (agenda=="Todas") {
+        if (agenda.equals("Todas")){
             stmt = con.prepareStatement(
-                    "SELECT * FROM compromisso where emailUsuario = ? and data between ? and ?");
+                    "SELECT * FROM compromisso where usuario = ? and data between ? and ?");
 
             stmt.setString(1, usuarioLogado.getEmail());
             stmt.setDate(2, java.sql.Date.valueOf(inicio));
@@ -186,9 +239,9 @@ public class CompromissoDaoBanco implements CompromissoDao {
         }
         else{
             stmt = con.prepareStatement(
-                    "SELECT * FROM compromisso where agenda = ? and emailUsuario = ? and data between ? and ?");
+                    "SELECT * FROM compromisso where agenda = ? and usuario = ? and data between ? and ?");
 
-            stmt.setString(2, agenda);
+            stmt.setString(1, agenda);
             stmt.setString(2, usuarioLogado.getEmail());
             stmt.setDate(3, java.sql.Date.valueOf(inicio));
             stmt.setDate(4, java.sql.Date.valueOf(fim));
@@ -200,7 +253,7 @@ public class CompromissoDaoBanco implements CompromissoDao {
 
             Compromisso compromisso = new Compromisso();
 
-            compromisso.setData(rs.getDate("data").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            compromisso.setData(rs.getDate("data").toLocalDate());
             compromisso.setHora(rs.getString("hora"));
             compromisso.setLocal(rs.getString("local"));
             compromisso.setDescricao(rs.getString("descricao"));

@@ -25,13 +25,15 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Essa classe contém métodos para persistência da entidade Compromisso em Arquivo Binário
  * @author ThigoYure
  */
 public class CompromissoDaoBinario implements CompromissoDao {
 
     File compromissos;
-
+    /**
+    * Construtor do DaoBinario da entidade Compromisso
+    */
     public CompromissoDaoBinario() {
         compromissos = new File("Compromissos.bin");
 
@@ -46,7 +48,16 @@ public class CompromissoDaoBinario implements CompromissoDao {
             }
         }
     }
-
+    /**
+     * Busca por um determinado compromisso no Arquivo Binário
+     * @param data a data do compromisso a buscar
+     * @param hora a data do compromisso a buscar
+     * @param agenda a agenda do compromisso a buscar
+     * @return o compromisso solicitado
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     * @throws IOException
+     */
     @Override
     public Compromisso readCompromissos(LocalDate data, String hora, String agenda) throws IOException, ClassNotFoundException,SQLException {
         List<Compromisso> compromissos = listCompromissos(agenda);
@@ -58,7 +69,13 @@ public class CompromissoDaoBinario implements CompromissoDao {
         }
         return null;
     }
-
+    /**
+     * Lista todos os compromissos do usuario logado no sistema
+     * @return a lista de todos os compromissos do usuario logado 
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public List<Compromisso> listCompromissos() throws IOException, ClassNotFoundException,SQLException {
         List<Compromisso> compromissos = new ArrayList<>();
@@ -80,7 +97,14 @@ public class CompromissoDaoBinario implements CompromissoDao {
             return new ArrayList<>();
         }
     }
-
+    /**
+     * Lista todos os compromisso de uma determinada agenda do usuário logado
+     * @param agenda nome da agenda do usuario
+     * @return a lista de compromissos para aquela agenda do usuario
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public List<Compromisso> listCompromissos(String agenda) throws IOException, ClassNotFoundException,SQLException {
         List<Compromisso> compromissos = new ArrayList<>();
@@ -102,7 +126,14 @@ public class CompromissoDaoBinario implements CompromissoDao {
             return new ArrayList<>();
         }
     }
-
+    /**
+     * Insere um compromisso no Arquivo Binário
+     * @param comp o compromisso a ser inserido
+     * @return a confirmação da inserção ou não
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public boolean createCompromissos(Compromisso comp) throws IOException, ClassNotFoundException,SQLException {
         List<Compromisso> compromissos = listCompromissos();
@@ -119,7 +150,14 @@ public class CompromissoDaoBinario implements CompromissoDao {
 
         return true;
     }
-
+    /**
+     * Remove um compromisso do Arquivo Binário
+     * @param comp o compromisso a ser removido
+     * @return a cnfirmação da remoção ou não
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public boolean deleteCompromissos(Compromisso comp) throws IOException, ClassNotFoundException,SQLException {
         List<Compromisso> compromissos = listCompromissos();
@@ -134,7 +172,15 @@ public class CompromissoDaoBinario implements CompromissoDao {
         }
         return false;
     }
-
+    /**
+     * Atualiza um compromisso no Arquivo Binário
+     * @param compNovo novo compromisso a ser inserido no lugar do antigo
+     * @param compAntigo compromisso antigo a ser substituido pelo novo
+     * @return a confirmação da atualização ou não
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public boolean updateCompromissos(Compromisso compNovo, Compromisso compAntigo) throws ClassNotFoundException, IOException, SQLException {
         List<Compromisso> compromissos = listCompromissos();
@@ -149,7 +195,16 @@ public class CompromissoDaoBinario implements CompromissoDao {
         }
         return false;
     }
-
+    /**
+     * Lista compromissos de um determinado intervalo de datas em uma determinada agenda
+     * @param inicio data inicial do intervalo
+     * @param fim data final do intervalo
+     * @param agenda nome da agenda a que os compromissos devem pertencer
+     * @return a lista de compromissos da agenda para o intervalo
+     * @throws ClassNotFoundException
+     * @throws IOException
+     * @throws SQLException 
+     */
     @Override
     public List<Compromisso> listarCompromissosIntervalo(LocalDate inicio, LocalDate fim, String agenda) throws ClassNotFoundException, IOException,SQLException {
         List<Compromisso> compromissosIntervalo = new ArrayList<>();
@@ -157,7 +212,7 @@ public class CompromissoDaoBinario implements CompromissoDao {
 
         if (agenda == "Todas") {
             for (int i = 0; i < compromissos.size(); i++) {
-                if (compromissos.get(i).getData().isAfter(inicio) && compromissos.get(i).getData().isBefore(fim)) {
+                if ((compromissos.get(i).getData().isAfter(inicio)||compromissos.get(i).getData().equals(inicio)) && (compromissos.get(i).getData().isBefore(fim)||compromissos.get(i).getData().equals(fim))) {
                     compromissosIntervalo.add(compromissos.get(i));
                 }
             }
@@ -165,7 +220,7 @@ public class CompromissoDaoBinario implements CompromissoDao {
         }
         else{
             for (int i = 0; i < compromissos.size(); i++) {
-                if (compromissos.get(i).getData().isAfter(inicio) && compromissos.get(i).getData().isBefore(fim)&&compromissos.get(i).getAgenda().equals(agenda)) {
+                if (((compromissos.get(i).getData().isAfter(inicio)||(compromissos.get(i).getData().equals(inicio)) &&( compromissos.get(i).getData().isBefore(fim)||compromissos.get(i).getData().equals(fim)))&&compromissos.get(i).getAgenda().equals(agenda))) {
                     compromissosIntervalo.add(compromissos.get(i));
                 }
             }
@@ -173,7 +228,11 @@ public class CompromissoDaoBinario implements CompromissoDao {
         }
     }
     
-
+    /**
+     * Atualiza o Arquivo Binário de compromissos
+     * @param compromissos lista de compromissos a ser usada para atualizar o arquivo
+     * @throws IOException 
+     */
     private void atualizarArquivo(List<Compromisso> compromissos) throws IOException {
         ObjectOutputStream out = new ObjectOutputStream(
                 new FileOutputStream(this.compromissos));

@@ -6,8 +6,10 @@
 package com.ifpb.MyPersonalAgenda.visao;
 
 import com.ifpb.MyPersonalAgenda.controle.AgendaDao;
+import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBinario;
 import com.ifpb.MyPersonalAgenda.controle.CompromissoDao;
+import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBinario;
 import com.ifpb.MyPersonalAgenda.excecoes.DataInvalidaException;
 import com.ifpb.MyPersonalAgenda.excecoes.EmailInvalidoException;
@@ -78,6 +80,7 @@ public class TelaNovoCompromisso extends javax.swing.JFrame {
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Novo Compromisso");
         setResizable(false);
 
         jLabel4.setFont(new java.awt.Font("Vladimir Script", 1, 48)); // NOI18N
@@ -227,7 +230,7 @@ public class TelaNovoCompromisso extends javax.swing.JFrame {
 
         try {
             comp.setData(jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            comp.setAgenda(jComboBox1.getSelectedItem().toString());
+            comp.setAgenda((String) jComboBox1.getSelectedItem());
             if (daoCompromisso.createCompromissos(comp)) {
 
                 JOptionPane.showMessageDialog(this.getContentPane(),
@@ -235,7 +238,6 @@ public class TelaNovoCompromisso extends javax.swing.JFrame {
                         "Sucesso",
                         JOptionPane.INFORMATION_MESSAGE);
                 PaginaInicial.atualizarTabela();
-                atualizarComboBox();
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this.getContentPane(),
@@ -246,8 +248,7 @@ public class TelaNovoCompromisso extends javax.swing.JFrame {
         } catch (ClassNotFoundException | SQLException | IOException ex) {
             JOptionPane.showMessageDialog(this.getContentPane(), "Falha na conexão");
         } catch (NullPointerException ex) {
-            //JOptionPane.showMessageDialog(this.getContentPane(), "Agenda Não Criada", "Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this.getContentPane(), "Agenda Não Criada", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (DataInvalidaException ex) {
             JOptionPane.showMessageDialog(this.getContentPane(), "Data Inválida!", "Error", JOptionPane.ERROR_MESSAGE);
         }

@@ -18,16 +18,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
- *
+ * Essa classe contém métodos para persistência da entidade usuario no Banco de Dados
  * @author ThigoYure
  */
 public class UsuarioDaoBanco implements UsuarioDao{
-    
+    /**
+     * Construtor do DaoBanco da entidade usuario
+     */
     public UsuarioDaoBanco(){
     }
-
+    /**
+     * Busca um usuario no Banco de Dados
+     * @param email email do usuario que se deseja recuperar
+     * @return o usuario buscado
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public Usuario read(String email) throws ClassNotFoundException, SQLException {
 
@@ -44,7 +53,7 @@ public class UsuarioDaoBanco implements UsuarioDao{
             try {
                 usuario.setEmail(rs.getString("email"));
             } catch (EmailInvalidoException ex) {
-                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Email não pode ser Vazio!");
             }
             usuario.setNome(rs.getString("nome"));
             usuario.setNascimento(rs.getDate("nascimento").toLocalDate());
@@ -52,7 +61,7 @@ public class UsuarioDaoBanco implements UsuarioDao{
             try {
                 usuario.setSenha(rs.getString("senha"));
             } catch (SenhaInvalidaException ex) {
-                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Senha não pode ser Vazia!");
             }
 
             con.close();
@@ -63,7 +72,12 @@ public class UsuarioDaoBanco implements UsuarioDao{
         }
 
     }
-
+    /**
+     * Lista todos os usuarios do Banco de Dados
+     * @return a lista de todos os usuarios
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public List<Usuario> list() throws ClassNotFoundException, SQLException {
         Connection con = ConnectionFactory.getConnection();
@@ -79,7 +93,7 @@ public class UsuarioDaoBanco implements UsuarioDao{
             try {
                 usuario.setEmail(rs.getString("email"));
             } catch (EmailInvalidoException ex) {
-                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Email não pode ser Vazio!");
             }
             usuario.setNome(rs.getString("nome"));
             usuario.setNascimento(rs.getDate("nascimento").toLocalDate());
@@ -87,7 +101,7 @@ public class UsuarioDaoBanco implements UsuarioDao{
             try {
                 usuario.setSenha(rs.getString("senha"));
             } catch (SenhaInvalidaException ex) {
-                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Senha não pode ser Vazia!");
             }
             usuarios.add(usuario);
         }
@@ -96,7 +110,13 @@ public class UsuarioDaoBanco implements UsuarioDao{
         return usuarios;
 
     }
-
+    /**
+     * Insere um usuario no Banco de Dados
+     * @param u usuario a ser inserido
+     * @return a confirmação da inserção ou não
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public boolean create(Usuario u) throws ClassNotFoundException, SQLException {
         Connection con = ConnectionFactory.getConnection();
@@ -115,7 +135,13 @@ public class UsuarioDaoBanco implements UsuarioDao{
         return retorno;
         
     }
-
+    /**
+     * Remove um usuario do Banco de Dados
+     * @param email email do usuario a ser removido
+     * @return a confirmação da remoção ou não
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public boolean delete(String email) throws ClassNotFoundException, SQLException {
         Connection con = ConnectionFactory.getConnection();
@@ -129,7 +155,13 @@ public class UsuarioDaoBanco implements UsuarioDao{
         return retorno;        
         
     }
-
+    /**
+     * Atualiza um usuario no Arquivo Binario
+     * @param u usuario a novo que substituirá o antigo
+     * @return confirmação da atualização ou não
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     @Override
     public boolean update(Usuario u) throws ClassNotFoundException, SQLException {
         Connection con = ConnectionFactory.getConnection();

@@ -6,8 +6,10 @@
 package com.ifpb.MyPersonalAgenda.visao;
 
 import com.ifpb.MyPersonalAgenda.controle.AgendaDao;
+import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBinario;
 import com.ifpb.MyPersonalAgenda.controle.CompromissoDao;
+import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBinario;
 import com.ifpb.MyPersonalAgenda.modelo.Agenda;
 import com.ifpb.MyPersonalAgenda.modelo.Compromisso;

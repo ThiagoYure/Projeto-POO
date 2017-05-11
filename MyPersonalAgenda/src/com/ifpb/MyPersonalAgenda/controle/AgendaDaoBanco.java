@@ -27,21 +27,30 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Essa classe contém métodos para persistência da entidade Agenda em Banco de Dados
  * @author ThigoYure
  */
 public class AgendaDaoBanco implements AgendaDao{
 
-
+    /**
+    * Construtor do DaoBanco da entidade Agenda
+    */
     public AgendaDaoBanco() {
 
     }
-
+    /**
+     * Busca por uma determinada agenda no Banco de Dados
+     * @param nome o nome da agenda
+     * @return a agenda solicitada
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException 
+     */
     @Override
     public Agenda read(String nome) throws ClassNotFoundException, SQLException, IOException {
         Connection con = ConnectionFactory.getConnection();
         PreparedStatement stmt = con.prepareStatement(
-                "SELECT * FROM agenda WHERE nome = ? and emailUsuario = ?");
+                "SELECT * FROM agenda WHERE nome = ? and usuario = ?");
 
         stmt.setString(1, nome);
         stmt.setString(2, usuarioLogado.getEmail());
@@ -52,7 +61,7 @@ public class AgendaDaoBanco implements AgendaDao{
 
             agenda.setNome(rs.getString("nome"));
             agenda.setDescricao(rs.getString("descricao"));
-            agenda.setEmailUser(rs.getString("emailusuario"));
+            agenda.setEmailUser(rs.getString("usuario"));
             con.close();
             return agenda;
         } else {
@@ -60,14 +69,21 @@ public class AgendaDaoBanco implements AgendaDao{
             return null;
         }
     }
-
+    /**
+     * Lista as agendas para um determinado usuario através do email desse usuário
+     * @param email email do usuário cujas agendas se quer
+     * @return a lista de agendas para aquele usuário
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException 
+     */
     @Override
     public List<Agenda> list(String email) throws ClassNotFoundException, SQLException, IOException {
         Connection con = ConnectionFactory.getConnection();
         PreparedStatement stmt = con.prepareStatement(
-                "SELECT * FROM agenda where emailUsuario = ?");
+                "SELECT * FROM agenda where usuario = ?");
 
-        stmt.setString(1, usuarioLogado.getEmail());
+        stmt.setString(1, email);
 
         ResultSet rs = stmt.executeQuery();
         List<Agenda> agendas = new ArrayList<>();
@@ -78,7 +94,7 @@ public class AgendaDaoBanco implements AgendaDao{
 
             agenda.setNome(rs.getString("nome"));
             agenda.setDescricao(rs.getString("descricao"));
-            agenda.setEmailUser(rs.getString("emailusuario"));
+            agenda.setEmailUser(rs.getString("usuario"));
 
             agendas.add(agenda);
         }
@@ -86,12 +102,19 @@ public class AgendaDaoBanco implements AgendaDao{
         con.close();
         return agendas;
     }
-
+    /**
+     * Insere uma agenda no Banco de Dados
+     * @param agenda a agenda que se deseja inserir no Banco de Dados
+     * @return a confirmação da inserção ou não
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException 
+     */
     @Override
     public boolean create(Agenda agenda) throws ClassNotFoundException, SQLException, IOException {
         Connection con = ConnectionFactory.getConnection();
         PreparedStatement stmt = con.prepareStatement(
-                "INSERT INTO agenda (nome, descricao, emailusuario) VALUES (?,?,?)");
+                "INSERT INTO agenda (nome, descricao, usuario) VALUES (?,?,?)");
 
         stmt.setString(1, agenda.getNome());
         stmt.setString(2, agenda.getDescricao());
@@ -101,13 +124,20 @@ public class AgendaDaoBanco implements AgendaDao{
         con.close();
         return retorno;
     }
-
+    /**
+     * Remove uma determinada agenda do Banco de dados através do seu nome
+     * @param nome o nome da agenda a ser removida
+     * @return a confirmação da remoção ou não
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException 
+     */
     @Override
     public boolean delete(String nome) throws ClassNotFoundException, SQLException, IOException {
         Connection con = ConnectionFactory.getConnection();
 
         PreparedStatement stmt = con.prepareStatement(
-                "DELETE FROM agenda WHERE nome = ? and emailUsuario = ?");
+                "DELETE FROM agenda WHERE nome = ? and usuario = ?");
         stmt.setString(1, nome);
         stmt.setString(2, usuarioLogado.getEmail());
 
@@ -115,13 +145,21 @@ public class AgendaDaoBanco implements AgendaDao{
         con.close();
         return retorno;
     }
-
+    /**
+     * Atualiza uma agenda já salva no Banco de Dados
+     * @param agendaNova agenda com os dados novos para substituir a antiga
+     * @param agendaAntiga agenda antiga que se deseja atualizar
+     * @return confirmação da atualização ou nâo
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws IOException 
+     */
     @Override
     public boolean update(Agenda agendaNova, Agenda agendaAntiga) throws ClassNotFoundException, SQLException, IOException {
         Connection con = ConnectionFactory.getConnection();
         PreparedStatement stmt = con.prepareStatement(
-                "UPDATE agenda SET (nome, descricao, emailusuario)"
-                + " = (?,?,?) WHERE nome = ? and emailUsuario = ?");
+                "UPDATE agenda SET (nome, descricao, usuario)"
+                + " = (?,?,?) WHERE nome = ? and usuario = ?");
         stmt.setString(1, agendaNova.getNome());
         stmt.setString(2, agendaNova.getDescricao());
         stmt.setString(3, agendaNova.getEmailUser());

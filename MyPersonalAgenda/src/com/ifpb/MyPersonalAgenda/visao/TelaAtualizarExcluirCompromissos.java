@@ -6,8 +6,10 @@
 package com.ifpb.MyPersonalAgenda.visao;
 
 import com.ifpb.MyPersonalAgenda.controle.AgendaDao;
+import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.AgendaDaoBinario;
 import com.ifpb.MyPersonalAgenda.controle.CompromissoDao;
+import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBanco;
 import com.ifpb.MyPersonalAgenda.controle.CompromissoDaoBinario;
 import com.ifpb.MyPersonalAgenda.modelo.Agenda;
 import com.ifpb.MyPersonalAgenda.modelo.Compromisso;
@@ -22,6 +24,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -91,6 +95,7 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Edição de Compromissos");
         setResizable(false);
 
         jLabel4.setFont(new java.awt.Font("Vladimir Script", 1, 48)); // NOI18N
@@ -266,7 +271,6 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
                         "Compromisso atualizado com sucesso!",
                         "Sucesso",
                         JOptionPane.INFORMATION_MESSAGE);
-                GerenciarAgendas.atualizarTabela();
                 atualizarTabela();
                 GerenciarCompromissos.atualizarTabela();
                 
@@ -299,7 +303,6 @@ public class TelaAtualizarExcluirCompromissos extends javax.swing.JFrame {
                         "Compromisso excluído com sucesso!",
                         "Sucesso",
                         JOptionPane.INFORMATION_MESSAGE);
-                GerenciarAgendas.atualizarTabela();
                 atualizarTabela();
                 GerenciarCompromissos.atualizarTabela();
                 
